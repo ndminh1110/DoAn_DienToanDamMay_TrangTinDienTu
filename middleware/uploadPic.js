@@ -1,17 +1,23 @@
 const multer = require('multer');
 const path = require('path');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-const storage = multer.diskStorage({
-  // Lưu ảnh vào public 
-  destination: (req, file, cb) => {
-    cb(null, 'public/picture');
-  },
-  // Đặt tên file: thời gian + tên gốc
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'trangtindientu',
+    allowed_formats: ['jpeg', 'jpg', 'png', 'gif', 'webp'],
+    transformation: [{ width: 800, crop: 'limit' }]
   }
 });
-// Chỉ cho phép upload ảnh
+
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|webp/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -24,5 +30,4 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({ storage, fileFilter });
-
 module.exports = upload;
