@@ -1,0 +1,150 @@
+<div class="row">
+  <!-- SIDEBAR -->
+  <div class="col-md-3">
+    <div class="d-flex flex-column p-3 bg-light rounded" style="min-height:500px">
+      <!-- Avatar -->
+      <div class="text-center mb-3">
+        <% if (taikhoan.avatar) { %>
+          <img src="<%= taikhoan.avatar %>" class="avatar-img mb-2">
+        <% } else { %>
+          <div class="avatar-text-big mx-auto mb-2">
+            <%= taikhoan.ten.charAt(0).toUpperCase() %>
+          </div>
+        <% } %>
+        <p class="fw-bold mb-0"><%= taikhoan.ten %></p>
+        <p class="text-muted small"><%= taikhoan.email %></p>
+        <!-- Hiện vai trò -->
+        <% if (taikhoan.vaitro === 'admin') { %>
+          <span class="badge bg-danger">👑 Quản trị viên</span>
+        <% } else { %>
+          <span class="badge bg-primary">👤 Thành viên</span>
+        <% } %>
+        <form action="/taikhoan/avatar" method="POST" enctype="multipart/form-data" class="mt-2">
+          <input type="file" name="avatar" class="form-control form-control-sm mb-2" required>
+          <button class="btn btn-sm btn-primary w-100">Đổi avatar</button>
+        </form>
+      </div>
+      <hr/>
+      <!-- Menu -->
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#thongtin" class="nav-link active" data-bs-toggle="pill">Thông tin cá nhân</a>
+        </li>
+        <li class="nav-item">
+          <a href="#baiviet" class="nav-link text-dark" data-bs-toggle="pill">
+            Bài viết của tôi
+            <% const soBaiChoDuyet = dsBaiViet.filter(b => b.trangThai === 'choDuyet').length; %>
+            <% if (soBaiChoDuyet > 0) { %>
+              <span class="badge bg-warning text-dark ms-1"><%= soBaiChoDuyet %></span>
+            <% } %>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#binhluan" class="nav-link text-dark" data-bs-toggle="pill">Bình luận của tôi</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="col-md-9">
+    <div class="tab-content">
+
+      <!-- Tab: Thông tin -->
+      <div class="tab-pane fade show active" id="thongtin">
+        <h5 class="fw-bold mb-4">Thông tin cá nhân</h5>
+        <div class="card shadow-sm mb-3">
+          <div class="card-body">
+            <h6 class="fw-bold mb-3">Đổi tên</h6>
+            <form action="/taikhoan/doiten" method="POST" class="d-flex gap-2">
+              <input type="text" name="ten" class="form-control" value="<%= taikhoan.ten %>" required/>
+              <button type="submit" class="btn btn-primary">Lưu</button>
+            </form>
+          </div>
+        </div>
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h6 class="fw-bold mb-3">Đổi mật khẩu</h6>
+            <form action="/taikhoan/doimatkhau" method="POST">
+              <input type="password" name="matkhauCu" class="form-control mb-2" placeholder="Mật khẩu cũ" required/>
+              <input type="password" name="matkhauMoi" class="form-control mb-2" placeholder="Mật khẩu mới" required/>
+              <button class="btn btn-warning">Đổi mật khẩu</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Bài viết -->
+      <div class="tab-pane fade" id="baiviet">
+        <h5 class="fw-bold mb-4">Bài viết của tôi (<%= dsBaiViet.length %>)</h5>
+        <% if (dsBaiViet.length === 0) { %>
+          <p class="text-muted">Bạn chưa có bài viết nào.</p>
+        <% } %>
+        <% dsBaiViet.forEach(baiViet => { %>
+          <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="fw-bold mb-1">
+                    <a href="/news/<%= baiViet._id %>" class="text-decoration-none text-dark">
+                      <%= baiViet.tieuDe %>
+                    </a>
+                  </h6>
+                  <small class="text-muted">
+                    <%= new Date(baiViet.createdAt).toLocaleDateString('vi-VN') %>
+                  </small>
+                </div>
+                <!-- Badge trạng thái -->
+                <div class="ms-2 text-nowrap">
+                  <% if (baiViet.trangThai === 'choDuyet') { %>
+                    <span class="badge bg-warning text-dark">⏳ Chờ duyệt</span>
+                  <% } else if (baiViet.trangThai === 'daDuyet') { %>
+                    <span class="badge bg-success">✅ Đã duyệt</span>
+                  <% } else if (baiViet.trangThai === 'tuChoi') { %>
+                    <span class="badge bg-danger">❌ Bị từ chối</span>
+                  <% } %>
+                </div>
+              </div>
+
+              <!-- Hiện lý do từ chối nếu có -->
+              <% if (baiViet.trangThai === 'tuChoi' && baiViet.lyDoTuChoi) { %>
+                <div class="alert alert-danger py-1 px-2 mt-2 mb-0 small">
+                  <strong>Lý do:</strong> <%= baiViet.lyDoTuChoi %>
+                </div>
+              <% } %>
+
+              <!-- Nút sửa / xoá -->
+              <div class="mt-2 d-flex gap-2">
+                <a href="/news/<%= baiViet._id %>/sua" class="btn btn-sm btn-outline-primary">✏️ Sửa</a>
+                <a href="/news/<%= baiViet._id %>/xoa" class="btn btn-sm btn-outline-danger"
+                   onclick="return confirm('Xác nhận xoá bài này?')">🗑 Xoá</a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+
+      <!-- Tab: Bình luận -->
+      <div class="tab-pane fade" id="binhluan">
+        <h5 class="fw-bold mb-4">Bình luận của tôi (<%= dsBinhLuan.length %>)</h5>
+        <% if (dsBinhLuan.length === 0) { %>
+          <p class="text-muted">Bạn chưa có bình luận nào.</p>
+        <% } %>
+        <% dsBinhLuan.forEach(bl => { %>
+          <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+              <p class="mb-1"><%= bl.noiDung %></p>
+              <small class="text-muted">
+                Bài viết:
+                <a href="/news/<%= bl.baiViet?._id %>" class="text-decoration-none">
+                  <%= bl.baiViet?.tieuDe || 'Đã xoá' %>
+                </a>
+              </small>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+
+    </div>
+  </div>
+</div>

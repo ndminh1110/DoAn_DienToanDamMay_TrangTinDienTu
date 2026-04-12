@@ -1,0 +1,149 @@
+<!-- MAIN -->
+<div class="container mt-3">
+  <div class="row">
+
+    <!-- LEFT -->
+    <div class="col-lg-9">
+
+  <!-- ================= TIN NỔI BẬT ================= -->
+  <div class="featured-box mb-4 p-3">
+    <div class="section-title mb-3">
+      🔥 Tin nổi bật
+    </div>
+
+    <% let top3 = tatCaBaiViet.slice().sort((a,b)=>b.luotXem-a.luotXem).slice(0,3); %>
+
+    <div class="row">
+      <% top3.forEach((bv, index) => { %>
+        <div class="<%= index === 0 ? 'col-12 mb-3' : 'col-md-6' %>">
+          <a href="/news/<%= bv._id %>" class="text-decoration-none">
+            <div class="card h-100 border-0 shadow-sm tin-card">
+
+             <img src="<%= bv.anhMinhHoa?.[0] || 'https://placehold.co/600x400' %>" 
+                class="card-img-top img-featured">
+
+              <div class="card-body">
+                <h6 class="fw-bold text-dark"><%= bv.tieuDe %></h6>
+                <small class="text-muted">👁 <%= bv.luotXem %></small>
+              </div>
+
+            </div>
+          </a>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+
+  <!-- ================= DANH SÁCH BÀI ================= -->
+  <div class="list-box p-3">
+    <div class="section-title mb-3">
+      📰 Tất cả bài viết
+    </div>
+
+    <div class="row g-3">
+      <% dsBaiViet.forEach(bv => { %>
+        <div class="col-md-4">
+          <a href="/news/<%= bv._id %>" class="text-decoration-none">
+            <div class="card h-100 tin-card">
+
+              <img src="<%= bv.anhMinhHoa?.[0] || 'https://placehold.co/400x250' %>" 
+                   class="card-img-top">
+
+              <div class="card-body">
+                <h6 class="fw-bold text-dark"><%= bv.tieuDe %></h6>
+
+                <p class="text-muted small">
+                  <%= bv.moTa || 'Chưa có mô tả...s' %>
+                </p>
+              </div>
+
+            </div>
+          </a>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+</div>
+
+
+    <!-- RIGHT: SIDEBAR -->
+    <div class="col-lg-3">
+      <div class="sidebar">
+
+        <div class="mb-4">
+          <a href="https://shopee.vn/" target="_blank" rel="noopener noreferrer">
+            <img src="/picture/shopee.png" width="100%" class="img-fluid rounded" style="cursor:pointer;">
+          </a>        
+        </div>
+
+        <div class="mb-4">
+          <a href="https://www.lottecinemavn.com/LCHS/Contents/Movie/Movie-Detail-View.aspx?movie=12114" target="_blank" rel="noopener noreferrer">
+            <img src="/picture/film.jpg" width="100%" class="img-fluid rounded" style="cursor:pointer;">
+          </a>        
+        </div>
+
+        <!-- Đề xuất -->
+        <div class="border rounded p-3">
+          <h6 class="fw-bold mb-3">Đề xuất</h6>
+          <% tatCaBaiViet.slice(0,3).forEach(bv => { %>
+            <a href="/news/<%= bv._id %>" class="d-block text-decoration-none mb-2">
+              <div class="border rounded px-3 py-2 text-dark">
+                <%= bv.tieuDe %>
+              </div>
+            </a>
+          <% }) %>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+<% if (tongSoTrang > 1) { %>
+	<nav class="mt-3 mb-3">
+	<ul class="pagination justify-content-center">
+
+		<li class="page-item <%= trangHienTai === 1 ? 'disabled' : '' %>">
+		  <a class="page-link" href="/news?trang=1">«</a>
+		</li>
+
+		<li class="page-item <%= trangHienTai === 1 ? 'disabled' : '' %>">
+		  <a class="page-link" href="/news?trang=<%= trangHienTai - 1 %>">‹</a>
+		</li>
+
+		<% 
+		  let tuTrang = Math.max(1, trangHienTai - 2);
+		  let denTrang = Math.min(tongSoTrang, trangHienTai + 2);
+		  if (denTrang - tuTrang < 4) {
+			if (tuTrang === 1) denTrang = Math.min(tongSoTrang, 5);
+			else tuTrang = Math.max(1, denTrang - 4);
+		  }
+		%>
+
+		<% if (tuTrang > 1) { %>
+		  <li class="page-item disabled"><span class="page-link">...</span></li>
+		<% } %>
+
+		<% for (let i = tuTrang; i <= denTrang; i++) { %>
+		  <li class="page-item <%= i === trangHienTai ? 'active' : '' %>">
+			<a class="page-link" href="/news?trang=<%= i %>"><%= i %></a>
+		  </li>
+		<% } %>
+
+		<% if (denTrang < tongSoTrang) { %>
+		  <li class="page-item disabled"><span class="page-link">...</span></li>
+		<% } %>
+
+		<li class="page-item <%= trangHienTai === tongSoTrang ? 'disabled' : '' %>">
+		  <a class="page-link" href="/news?trang=<%= trangHienTai + 1 %>">›</a>
+		</li>
+
+		<li class="page-item <%= trangHienTai === tongSoTrang ? 'disabled' : '' %>">
+		  <a class="page-link" href="/news?trang=<%= tongSoTrang %>">»</a>
+		</li>
+
+	  </ul>
+	</nav>
+	<% } %>

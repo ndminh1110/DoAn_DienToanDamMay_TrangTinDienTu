@@ -1,0 +1,35 @@
+<h4 class="mb-4">
+  <% if (theLoai) { %>
+    Thể loại: <span class="badge bg-dark"><%= theLoai %></span>
+  <% } else if (timkiem) { %>
+    Kết quả tìm kiếm: <span class="badge bg-dark"><%= timkiem %></span>
+  <% } %>
+  <span class="text-muted small ms-2">(<%= dsBaiViet.length %> bài viết)</span>
+</h4>
+
+<% if (dsBaiViet.length === 0) { %>
+  <p class="text-muted">Khong co bai viet nao.</p>
+<% } else { %>
+  <div class="row g-4">
+    <% dsBaiViet.forEach(baiViet => { %>
+      <div class="col-md-4">
+        <div class="card h-100">
+          <% if (baiViet.anhMinhHoa && baiViet.anhMinhHoa.length > 0) { %>
+            <img src="<%= baiViet.anhMinhHoa[0] %>" class="card-img-top" class="card-img-danhsach w-100""/>
+          <% } else { %>
+            <div class="bg-secondary" style="height:160px"></div>
+          <% } %>
+          <div class="card-body p-2">
+            <span class="badge bg-secondary mb-1"><%= baiViet.theLoai %></span>
+            <h6 class="card-title">
+              <a href="/news/<%= baiViet._id %>" class="text-decoration-none"><%= baiViet.tieuDe %></a>
+            </h6>
+            <p class="text-muted small mb-0">
+              <%= baiViet.tacGia?.ten %> &bull; <%= new Date(baiViet.createdAt).toLocaleDateString('vi-VN') %>
+            </p>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+<% } %>

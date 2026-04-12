@@ -1,0 +1,53 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h3 class="card-title mb-4">Sửa bài viết</h3>
+        <form action="/news/<%= baiViet._id %>/sua" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label class="form-label">Tiêu đề</label>
+            <input type="text" name="tieuDe" class="form-control" value="<%= baiViet.tieuDe %>" required/>
+          </div>
+          <div class="mb-3">
+          <label class="form-label">Mô tả ngắn</label>
+          <textarea name="moTa" class="form-control" rows="3"><%= baiViet.moTa %></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Thể loại</label>
+            <select name="theLoai" class="form-select">
+              <option value="Nghệ sĩ" <%= baiViet.theLoai === 'Nghệ sĩ' ? 'selected' : '' %>>Nghệ sĩ</option>
+              <option value="Âm nhạc" <%= baiViet.theLoai === 'Âm nhạc' ? 'selected' : '' %>>Âm nhạc</option>
+              <option value="Show" <%= baiViet.theLoai === 'Show' ? 'selected' : '' %>>Show</option>
+              <option value="Album" <%= baiViet.theLoai === 'Album' ? 'selected' : '' %>>Album</option>
+              <option value="Phim" <%= baiViet.theLoai === 'Phim' ? 'selected' : '' %>>Phim</option>
+              <option value="Thể thao" <%= baiViet.theLoai === 'Thể thao' ? 'selected' : '' %>>Thể thao</option>
+              <option value="Khác" <%= baiViet.theLoai === 'Khác' ? 'selected' : '' %>>Khác</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Ảnh minh họa</label>
+            <% if (baiViet.anhMinhHoa && baiViet.anhMinhHoa.length > 0) { %>
+              <div class="row mb-2">
+                <% baiViet.anhMinhHoa.forEach(anh => { %>
+                  <div class="col-3">
+                    <img src="<%= anh %>" class="img-fluid rounded"/>
+                  </div>
+                <% }) %>
+              </div>
+            <% } %>
+            <input type="file" name="anhMinhHoa" class="form-control" accept="image/*" multiple/>
+            <small class="text-muted">Để trống nếu không muốn thay đổi ảnh</small>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Nội dung</label>
+            <textarea name="noiDung" class="form-control" rows="10" required><%= baiViet.noiDung %></textarea>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-warning">Lưu thay đổi</button>
+            <a href="/news/<%= baiViet._id %>" class="btn btn-outline-secondary">Hủy</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<footer class="border-top mt-5 py-4">
+  <div class="container">
+    <div class="row">
+  <!-- CỘT 1 -->
+  <div class="col-md-4 mb-3">
+    <a class="navbar-brand fw-bold" href="/news">Trang Tin Điện Tử</a>
+    <p class="text-muted small mt-2">
+      Trang tin tức giải trí điện tử — cập nhật tin tức mới nhất về nghệ sĩ, âm nhạc, phim, show.
+    </p>
+  </div>
+
+  <!-- CỘT 2 -->
+  <div class="col-md-2 mb-3">
+    <h6 class="fw-bold">Thể loại</h6>
+    <ul class="list-unstyled text-muted small">
+          <li><a href="/news?theLoai=Nghệ sĩ" class="text-muted text-decoration-none">Nghệ sĩ</a></li>
+          <li><a href="/news?theLoai=Âm nhạc" class="text-muted text-decoration-none">Âm nhạc</a></li>
+          <li><a href="/news?theLoai=Phim" class="text-muted text-decoration-none">Phim</a></li>
+          <li><a href="/news?theLoai=Show" class="text-muted text-decoration-none">Show</a></li>
+          <li><a href="/news?theLoai=Album" class="text-muted text-decoration-none">Album</a></li>
+		  <li><a href="/news?theLoai=Thể thao" class="text-muted text-decoration-none">Thể thao</a></li>
+		  <li><a href="/news?theLoai=Khác" class="text-muted text-decoration-none">Khác</a></li>
+        </ul>
+  </div>
+
+  <!-- CỘT 3 -->
+  <div class="col-md-2 mb-3">
+    <h6 class="fw-bold">Tài khoản</h6>
+      <ul class="list-unstyled text-muted small">
+          <% if (session.MaNguoiDung) { %>
+            <li><a href="/news/tao" class="text-muted text-decoration-none">Viết bài</a></li>
+            <li><a href="/auth/dangxuat" class="text-muted text-decoration-none">Đăng xuất</a></li>
+          <% } else { %>
+            <li><a href="/auth/dangnhap" class="text-muted text-decoration-none">Đăng nhập</a></li>
+            <li><a href="/auth/dangky" class="text-muted text-decoration-none">Đăng ký</a></li>
+          <% } %>
+        </ul>
+  </div>
+
+  <!-- 🔥 CỘT 4 (LOGO) -->
+  <div class="col-md-4 mb-3 d-flex align-items-center justify-content-end">
+    <img src="/picture/logo.png" alt="logo" class="footer-logo-big">
+  </div>
+</div>
+    <div class="border-top pt-3 text-muted small text-center">
+      © 2026 Trang Tin Điện Tử. All rights reserved.
+    </div>
+  </div>
+</footer>

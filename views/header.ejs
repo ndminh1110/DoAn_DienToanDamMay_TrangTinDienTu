@@ -1,0 +1,89 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="/news">
+      <img src="/picture/logo.png" alt="logo" class="logo-img">
+      Trang Tin Điện Tử
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="/news">Trang chủ</a></li>
+        <li class="nav-item"><a class="nav-link" href="/news?theLoai=Nghệ sĩ">Nghệ sĩ</a></li>
+        <li class="nav-item"><a class="nav-link" href="/news?theLoai=Âm nhạc">Âm nhạc</a></li>
+        <li class="nav-item"><a class="nav-link" href="/news?theLoai=Phim">Phim</a></li>
+        <li class="nav-item"><a class="nav-link" href="/news?theLoai=Show">Show</a></li>
+        <li class="nav-item"><a class="nav-link" href="/news?theLoai=Album">Album</a></li>
+        <li class="nav-item"><a class="nav-link" href="/news?theLoai=Thể thao">Thể thao</a></li>
+        <li class="nav-item"><a class="nav-link" href="/news?theLoai=Khác">Khác</a></li>
+      </ul>
+
+      <form action="/news" method="GET" class="d-flex ms-2">
+        <input type="text" name="timkiem" class="form-control form-control-sm" placeholder="Tìm kiếm..." value="<%= timkiem || '' %>"/>
+        <button type="submit" class="btn btn-sm btn-dark ms-1">Tìm</button>
+      </form>
+
+      <div class="d-flex gap-2">
+        <% if (session.MaNguoiDung) { %>
+
+          <!-- Nút quản trị — chỉ hiện với admin -->
+          <% if (session.QuyenHan === 'admin') { %>
+            <a class="btn btn-warning btn-sm" href="/admin">👑 Quản trị</a>
+          <% } %>
+
+          <a class="btn btn-outline-secondary btn-sm" href="/news/tao">Viết bài</a>
+
+          <div class="dropdown">
+            <a class="btn btn-outline-light btn-sm dropdown-toggle d-flex align-items-center gap-2"
+               href="#" data-bs-toggle="dropdown">
+              <% if (session.avatar) { %>
+                <img src="<%= session.avatar %>"
+                     class="rounded-circle"
+                     width="28" height="28"
+                     style="object-fit: cover;">
+              <% } else { %>
+                <div class="avatar-text">
+                  <%= session.HoVaTen.charAt(0).toUpperCase() %>
+                </div>
+              <% } %>
+              <span><%= session.HoVaTen %></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <div class="px-3 py-2 border-bottom">
+                  <p class="fw-bold mb-0"><%= session.HoVaTen %></p>
+                  <p class="text-muted small mb-0">
+                    <% if (session.QuyenHan === 'admin') { %>
+                      👑 Quản trị viên
+                    <% } else { %>
+                      👤 Thành viên
+                    <% } %>
+                  </p>
+                </div>
+              </li>
+              <li><a class="dropdown-item" href="/taikhoan">Thông tin cá nhân</a></li>
+              <li><a class="dropdown-item" href="/taikhoan#baiviet">Bài viết của tôi</a></li>
+              <li><a class="dropdown-item" href="/taikhoan#binhluan">Bình luận của tôi</a></li>
+              <% if (session.QuyenHan === 'admin') { %>
+                <li><hr class="dropdown-divider"/></li>
+                <li><a class="dropdown-item text-warning" href="/admin">👑 Trang quản trị</a></li>
+              <% } %>
+              <li><hr class="dropdown-divider"/></li>
+              <li><a class="dropdown-item text-danger" href="/auth/dangxuat">Đăng xuất</a></li>
+            </ul>
+          </div>
+
+        <% } else { %>
+          <a class="btn btn-outline-primary btn-sm" href="/auth/dangnhap">Đăng nhập</a>
+          <a class="btn btn-primary btn-sm" href="/auth/dangky">Đăng ký</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO FULL WIDTH -->
+<div class="hero-banner-full">
+  <img src="/picture/banner.png" alt="banner">
+</div>

@@ -1,0 +1,71 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="fw-bold mb-0">👥 Quản lý người dùng</h4>
+  <a href="/admin" class="btn btn-outline-secondary btn-sm">← Về trang admin</a>
+</div>
+
+<% if (dsNguoiDung.length === 0) { %>
+  <div class="alert alert-info">Chưa có người dùng nào.</div>
+<% } else { %>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Tên</th>
+          <th>Email</th>
+          <th>Vai trò</th>
+          <th>Ngày tạo</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% dsNguoiDung.forEach(tk => { %>
+          <tr class="<%= tk._id.toString() === session.MaNguoiDung.toString() ? 'table-active' : '' %>">
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <% if (tk.avatar) { %>
+                  <img src="<%= tk.avatar %>" class="rounded-circle" width="32" height="32"
+                    style="object-fit:cover">
+                <% } %>
+                <span class="fw-semibold"><%= tk.ten %></span>
+                <% if (tk._id.toString() === session.MaNguoiDung.toString()) { %>
+                  <span class="badge bg-secondary">Bạn</span>
+                <% } %>
+              </div>
+            </td>
+            <td class="text-muted"><%= tk.email %></td>
+            <td>
+              <% if (tk.vaitro === 'admin') { %>
+                <span class="badge bg-danger">👑 Admin</span>
+              <% } else { %>
+                <span class="badge bg-primary">👤 User</span>
+              <% } %>
+            </td>
+            <td class="text-muted small">
+              <%= new Date(tk.createdAt).toLocaleDateString('vi-VN') %>
+            </td>
+            <td>
+              <% if (tk._id.toString() !== session.MaNguoiDung.toString()) { %>
+                <div class="d-flex gap-1">
+                  <!-- Đổi vai trò -->
+                  <form action="/admin/nguoidung/<%= tk._id %>/doivaitro" method="POST"
+                    onsubmit="return confirm('Đổi vai trò tài khoản này?')">
+                    <button class="btn btn-sm <%= tk.vaitro === 'admin' ? 'btn-outline-danger' : 'btn-outline-success' %>">
+                      <%= tk.vaitro === 'admin' ? '⬇ Hạ xuống User' : '⬆ Nâng lên Admin' %>
+                    </button>
+                  </form>
+                  <!-- Xoá -->
+                  <form action="/admin/nguoidung/<%= tk._id %>/xoa" method="POST"
+                    onsubmit="return confirm('Xác nhận xoá tài khoản <%= tk.ten %>?')">
+                    <button class="btn btn-sm btn-danger">🗑 Xoá</button>
+                  </form>
+                </div>
+              <% } else { %>
+                <span class="text-muted small">—</span>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>

@@ -1,0 +1,129 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="fw-bold mb-0">📰 Quản lý bài viết</h4>
+  <a href="/admin" class="btn btn-outline-secondary btn-sm">← Về trang admin</a>
+</div>
+
+<!-- Bộ lọc -->
+<div class="mb-3 d-flex gap-2 flex-wrap">
+  <a href="/admin/baiviet"
+     class="btn btn-sm <%= trangThaiLoc === '' ? 'btn-dark' : 'btn-outline-dark' %>">
+    Tất cả
+  </a>
+  <a href="/admin/baiviet?trangThai=choDuyet"
+     class="btn btn-sm <%= trangThaiLoc === 'choDuyet' ? 'btn-warning' : 'btn-outline-warning' %>">
+    ⏳ Chờ duyệt
+  </a>
+  <a href="/admin/baiviet?trangThai=daDuyet"
+     class="btn btn-sm <%= trangThaiLoc === 'daDuyet' ? 'btn-success' : 'btn-outline-success' %>">
+    ✅ Đã duyệt
+  </a>
+  <a href="/admin/baiviet?trangThai=tuChoi"
+     class="btn btn-sm <%= trangThaiLoc === 'tuChoi' ? 'btn-danger' : 'btn-outline-danger' %>">
+    ❌ Từ chối
+  </a>
+</div>
+
+<% if (dsBaiViet.length === 0) { %>
+  <div class="alert alert-info">Không có bài viết nào.</div>
+<% } else { %>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Tiêu đề</th>
+          <th>Tác giả</th>
+          <th>Thể loại</th>
+          <th>Trạng thái</th>
+          <th>Ngày tạo</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% dsBaiViet.forEach(bv => { %>
+          <tr>
+            <td>
+              <a href="/news/<%= bv._id %>" target="_blank" class="text-decoration-none fw-semibold">
+                <%= bv.tieuDe %>
+              </a>
+              <% if (bv.trangThai === 'tuChoi' && bv.lyDoTuChoi) { %>
+                <div class="text-danger small mt-1">Lý do: <%= bv.lyDoTuChoi %></div>
+              <% } %>
+            </td>
+            <td>
+              <div><%= bv.tacGia?.ten || 'N/A' %></div>
+              <div class="text-muted small"><%= bv.tacGia?.email || '' %></div>
+            </td>
+            <td><span class="badge bg-secondary"><%= bv.theLoai %></span></td>
+            <td>
+              <% if (bv.trangThai === 'choDuyet') { %>
+                <span class="badge bg-warning text-dark">⏳ Chờ duyệt</span>
+              <% } else if (bv.trangThai === 'daDuyet') { %>
+                <span class="badge bg-success">✅ Đã duyệt</span>
+              <% } else { %>
+                <span class="badge bg-danger">❌ Từ chối</span>
+              <% } %>
+            </td>
+            <td class="text-muted small">
+              <%= new Date(bv.createdAt).toLocaleDateString('vi-VN') %>
+            </td>
+            <td>
+              <div class="d-flex gap-1 flex-wrap">
+
+                <!-- Duyệt (nếu chưa duyệt) -->
+                <% if (bv.trangThai !== 'daDuyet') { %>
+                  <form action="/admin/baiviet/<%= bv._id %>/duyet" method="POST">
+                    <button class="btn btn-success btn-sm">✅ Duyệt</button>
+                  </form>
+                <% } %>
+
+                <!-- Từ chối (nếu chưa từ chối) -->
+                <% if (bv.trangThai !== 'tuChoi') { %>
+                  <button class="btn btn-warning btn-sm"
+                    onclick="moFormTuChoi('<%= bv._id %>')">
+                    ❌ Từ chối
+                  </button>
+                <% } %>
+
+                <!-- Xoá -->
+                <form action="/admin/baiviet/<%= bv._id %>/xoa" method="POST"
+                  onsubmit="return confirm('Xác nhận xoá bài này?')">
+                  <button class="btn btn-danger btn-sm">🗑 Xoá</button>
+                </form>
+
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<!-- Modal nhập lý do từ chối -->
+<div class="modal fade" id="modalTuChoi" tabindex="-1">
+  <div class="modal-dialog">
+    <form id="formTuChoi" method="POST">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Lý do từ chối</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <textarea name="lyDo" class="form-control" rows="3"
+            placeholder="Nhập lý do từ chối bài viết này..." required></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+          <button type="submit" class="btn btn-danger">Xác nhận từ chối</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function moFormTuChoi(id) {
+  document.getElementById('formTuChoi').action = '/admin/baiviet/' + id + '/tuchoi';
+  new bootstrap.Modal(document.getElementById('modalTuChoi')).show();
+}
+</script>
