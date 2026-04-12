@@ -70,7 +70,7 @@ router.post('/tao', kiemTraDangNhap, upload.array('anhMinhHoa'), async (req, res
     moTa: req.body.moTa,
     noiDung: req.body.noiDung,
     theLoai: req.body.theLoai,
-    anhMinhHoa: req.files ? req.files.map(f => '/picture/' + f.filename) : [],
+    anhMinhHoa: req.files ? req.files.map(f => f.path) : [],
     tacGia: req.session.MaNguoiDung,
     trangThai: 'choDuyet', // luôn chờ duyệt khi mới tạo
   };
@@ -145,7 +145,7 @@ router.post('/:id/sua', kiemTraDangNhap, upload.array('anhMinhHoa', 10), async (
   }
 
   const anhMoi = req.files && req.files.length > 0
-    ? req.files.map(f => '/picture/' + f.filename)
+    ? req.files.map(f => f.path)
     : baiViet.anhMinhHoa;
 
   await BaiViet.findByIdAndUpdate(req.params.id, {
