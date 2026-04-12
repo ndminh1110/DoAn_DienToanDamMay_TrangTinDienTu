@@ -96,6 +96,15 @@
   justify-content: center;
   font-size: 36px;
 }
+
+@media (min-width: 992px) {
+    .navbar-nav .nav-link {
+        padding-left: 0.5rem !important; /* Giảm từ 1rem xuống 0.5rem */
+        padding-right: 0.5rem !important;
+        white-space: nowrap; /* Ngăn chữ trong 1 mục bị xuống dòng */
+    }
+}
+
 /* Tin nổi bật */
 .section-title {
   font-size: 18px;

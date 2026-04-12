@@ -1,15 +1,46 @@
 const axios = require("axios");
 
-const LIBRETRANSLATE_URL = process.env.LIBRETRANSLATE_URL || "http://localhost:5000";
+// Chia text thành các đoạn <= 500 ký tự
+function splitText(text, maxLength = 450) {
+  const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
+  const chunks = [];
+  let current = "";
+
+  for (const sentence of sentences) {
+    if ((current + sentence).length > maxLength) {
+      if (current) chunks.push(current.trim());
+      current = sentence;
+    } else {
+      current += sentence;
+    }
+  }
+  if (current) chunks.push(current.trim());
+  return chunks;
+}
 
 async function translateText(text, targetLang, sourceLang = "auto") {
-  const response = await axios.post(`${LIBRETRANSLATE_URL}/translate`, {
-    q: text,
-    source: sourceLang,
-    target: targetLang,
-    api_key: "",
-  });
-  return response.data.translatedText;
+  try {
+    if (!text || text.trim() === "") return text;
+
+    const chunks = splitText(text);
+    const results = await Promise.all(
+      chunks.map(async (chunk) => {
+        const response = await axios.get("https://api.mymemory.translated.net/get", {
+			params: {
+			  q: chunk,
+			  langpair: sourceLang === "auto" ? `en|${targetLang}` : `${sourceLang}|${targetLang}`,
+			  de: "nguyendominh8@gmail.com"  
+			  }
+        });
+        return response.data.responseData.translatedText;
+      })
+    );
+
+    return results.join(" ");
+  } catch (err) {
+    console.error("Lỗi dịch:", err.message);
+    return text;
+  }
 }
 
 async function translateArticle(article, targetLangs) {
