@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const session = require('express-session');
 const express = require('express');
 const path = require('path');
@@ -11,7 +12,7 @@ const app = express();
 // Kết nối MongoDB
 connectDB();
 
-// Cấu hình template engine
+// giao diện dùng ejs để render
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(ejsLayouts);
@@ -19,8 +20,10 @@ app.set('layout', 'layout');
 
 
 // Middleware
+// đọc dữ liệu từ html trước
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+// lưu đăng nhập
 app.use(session({
   secret: process.env.JWT_SECRET,
   resave: false,

@@ -26,7 +26,7 @@ const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
-    cb('Chỉ được upload file ảnh!');
+    cb('Chỉ được upload file ảnh có đuôi jpeg, jpg, png, gif, webp, jfif, avif, bmp, svg, tiff, tif, ico, jp2, j2k !');
   }
 };	
 

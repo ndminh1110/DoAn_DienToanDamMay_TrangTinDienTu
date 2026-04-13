@@ -1,13 +1,15 @@
 /* Trang chu */
+
+/*banner*/
 .hero-banner-full {
   width: 100%;
-  height: 320px; /* bạn muốn nhỏ bao nhiêu tùy */
+  height: 320px;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
-  background: #000; /* nền đen cho đẹp */
+  background: #000;
   border-radius: 0px;
   overflow: hidden;
 }
@@ -15,9 +17,10 @@
 .hero-banner-full img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* 🔥 KHÔNG bị cắt ảnh */
+  object-fit: contain;
 }
 
+/*ảnh card bài viết*/
 .card img,
 .border.rounded img {
     width: 100%;
@@ -99,7 +102,7 @@
 
 @media (min-width: 992px) {
     .navbar-nav .nav-link {
-        padding-left: 0.5rem !important; /* Giảm từ 1rem xuống 0.5rem */
+        padding-left: 0.5rem !important;
         padding-right: 0.5rem !important;
         white-space: nowrap; /* Ngăn chữ trong 1 mục bị xuống dòng */
     }
@@ -129,11 +132,12 @@
 }
 
 .tin-card:hover {
+	/*hiệu ứng nâng bài viết*/
   transform: translateY(-5px);
   box-shadow: 0 6px 18px rgba(0,0,0,0.1);
 }
 .img-featured {
-  height: 160px;   /* trước có thể ~250-300px */
+  height: 160px;  
   object-fit: cover;
 }
 

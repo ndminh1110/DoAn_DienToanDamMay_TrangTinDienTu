@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { translateText } = require("../services/dich");
-// Dịch một đoạn text
+
+// Dịch
 router.post("/text", async (req, res) => {
   const { text, targetLang, sourceLang = "auto" } = req.body;
   if (!text || !targetLang)

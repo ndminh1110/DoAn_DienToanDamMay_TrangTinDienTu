@@ -1,4 +1,5 @@
 const router = require('express').Router();
+
 const BaiViet = require('../models/baiviet');
 const upload = require('../middleware/uploadPic');
 const { kiemTraDangNhap, kiemTraAdmin } = require('../middleware/auth');
@@ -63,7 +64,7 @@ router.get('/tao', kiemTraDangNhap, (req, res) => {
   res.render('taobaiviet', { title: 'Tạo bài viết', session: req.session, theLoai: '', timkiem: '' });
 });
 
-// POST: Xử lý tạo bài — tự động set choDuyet
+// POST: Xử lý tạo bài
 router.post('/tao', kiemTraDangNhap, upload.array('anhMinhHoa'), async (req, res) => {
   const data = {
     tieuDe: req.body.tieuDe,
@@ -72,14 +73,13 @@ router.post('/tao', kiemTraDangNhap, upload.array('anhMinhHoa'), async (req, res
     theLoai: req.body.theLoai,
     anhMinhHoa: req.files ? req.files.map(f => f.path) : [],
     tacGia: req.session.MaNguoiDung,
-    trangThai: 'choDuyet', // luôn chờ duyệt khi mới tạo
+    trangThai: 'choDuyet',
   };
 
   await BaiViet.create(data);
   req.session.success = 'Bài viết đã được gửi, chờ admin duyệt!';
   res.redirect('/news');
 });
-
 
 // GET: Chi tiết bài viết
 router.get('/:id', async (req, res) => {
@@ -94,7 +94,7 @@ router.get('/:id', async (req, res) => {
     return res.redirect('/news');
   }
 
-  // Chặn xem bài chưa duyệt (trừ tác giả và admin)
+  // Chặn xem bài chưa duyệt
   const laTacGia = req.session.MaNguoiDung && baiViet.tacGia._id.toString() === req.session.MaNguoiDung.toString();
   const laAdmin = req.session.QuyenHan === 'admin';
 
@@ -119,7 +119,7 @@ router.get('/:id', async (req, res) => {
 });
 
 
-// GET: Form sửa bài — chỉ tác giả
+// GET: Form sửa bài 
 router.get('/:id/sua', kiemTraDangNhap, async (req, res) => {
   const baiViet = await BaiViet.findById(req.params.id);
 
@@ -133,7 +133,7 @@ router.get('/:id/sua', kiemTraDangNhap, async (req, res) => {
   res.render('suabai', { title: 'Sửa bài viết', baiViet, session: req.session, theLoai: '', timkiem: '' });
 });
 
-// POST: Xử lý sửa bài — chỉ tác giả, sửa xong reset về choDuyet
+// POST: Xử lý sửa bài
 router.post('/:id/sua', kiemTraDangNhap, upload.array('anhMinhHoa', 10), async (req, res) => {
   const baiViet = await BaiViet.findById(req.params.id);
 
@@ -154,7 +154,7 @@ router.post('/:id/sua', kiemTraDangNhap, upload.array('anhMinhHoa', 10), async (
     noiDung: req.body.noiDung,
     theLoai: req.body.theLoai,
     anhMinhHoa: anhMoi,
-    trangThai: 'choDuyet', // sửa bài thì cần duyệt lại
+    trangThai: 'choDuyet', 
     lyDoTuChoi: ''
   });
 
@@ -163,7 +163,7 @@ router.post('/:id/sua', kiemTraDangNhap, upload.array('anhMinhHoa', 10), async (
 });
 
 
-// GET: Xóa bài — chỉ tác giả hoặc admin
+// GET: Xóa bài 
 router.get('/:id/xoa', kiemTraDangNhap, async (req, res) => {
   const baiViet = await BaiViet.findById(req.params.id);
 
@@ -183,7 +183,7 @@ router.get('/:id/xoa', kiemTraDangNhap, async (req, res) => {
 });
 
 
-// POST: Like/Unlike bài viết
+// POST: Like bài viết
 router.post('/:id/like', kiemTraDangNhap, async (req, res) => {
   const baiViet = await BaiViet.findById(req.params.id);
   const daDaLike = baiViet.luotThich.includes(req.session.MaNguoiDung);

@@ -1,4 +1,5 @@
 const router = require('express').Router();
+
 const BaiViet = require('../models/baiviet');
 const TaiKhoan = require('../models/taikhoan');
 const { kiemTraDangNhap, kiemTraAdmin } = require('../middleware/auth');
@@ -6,10 +7,10 @@ const { kiemTraDangNhap, kiemTraAdmin } = require('../middleware/auth');
 router.use(kiemTraDangNhap, kiemTraAdmin);
 
 router.get('/', async (req, res) => {
-  const tongBaiViet  = await BaiViet.countDocuments();
-  const choDuyet     = await BaiViet.countDocuments({ trangThai: 'choDuyet' });
-  const daDuyet      = await BaiViet.countDocuments({ trangThai: 'daDuyet' });
-  const tuChoi       = await BaiViet.countDocuments({ trangThai: 'tuChoi' });
+  const tongBaiViet = await BaiViet.countDocuments();
+  const choDuyet = await BaiViet.countDocuments({ trangThai: 'choDuyet' });
+  const daDuyet = await BaiViet.countDocuments({ trangThai: 'daDuyet' });
+  const tuChoi = await BaiViet.countDocuments({ trangThai: 'tuChoi' });
   const tongNguoiDung = await TaiKhoan.countDocuments({ vaitro: 'user' });
 
   res.render('admin/index', {
@@ -80,8 +81,7 @@ router.get('/nguoidung', async (req, res) => {
 // POST: Đổi vai trò user <-> admin
 router.post('/nguoidung/:id/doivaitro', async (req, res) => {
   const taikhoan = await TaiKhoan.findById(req.params.id);
-
-  // Không cho tự đổi vai trò của chính mình
+  
   if (taikhoan._id.toString() === req.session.MaNguoiDung.toString()) {
     req.session.error = 'Không thể đổi vai trò của chính mình!';
     return res.redirect('/admin/nguoidung');
@@ -105,6 +105,5 @@ router.post('/nguoidung/:id/xoa', async (req, res) => {
   req.session.success = 'Đã xoá người dùng!';
   res.redirect('/admin/nguoidung');
 });
-
 
 module.exports = router;

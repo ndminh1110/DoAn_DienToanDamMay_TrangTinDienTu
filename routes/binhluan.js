@@ -1,4 +1,5 @@
 const router = require('express').Router();
+
 const BinhLuan = require('../models/binhluan');
 const { kiemTraDangNhap } = require('../middleware/auth');
 

@@ -58,7 +58,7 @@ router.get('/dangxuat', async (req, res) => {
     delete req.session.MaNguoiDung;
     delete req.session.HoVaTen;
     delete req.session.QuyenHan;
-    delete req.session.avatar; // 👈 THÊM
+    delete req.session.avatar; 
     req.session.success = 'Đã đăng xuất!';
 	res.redirect('/news');
   } else {

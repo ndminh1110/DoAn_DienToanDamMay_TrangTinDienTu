@@ -1,4 +1,5 @@
 const router = require('express').Router();
+
 const TaiKhoan = require('../models/taikhoan');
 const BaiViet = require('../models/baiviet');
 const bcrypt = require('bcryptjs');
@@ -7,13 +8,18 @@ const upload = require('../middleware/uploadPic');
 
 // GET: Trang cá nhân
 router.get('/', kiemTraDangNhap, async (req, res) => {
-  const taikhoan = await TaiKhoan.findById(req.session.MaNguoiDung);
-  const dsBaiViet = await BaiViet.find({ tacGia: req.session.MaNguoiDung })
+  const taikhoan = await TaiKhoan
+	.findById(req.session.MaNguoiDung);
+	
+  const dsBaiViet = await BaiViet
+	.find({ tacGia: req.session.MaNguoiDung })
     .sort('-createdAt');
+	
   const dsBinhLuan = await require('../models/binhluan')
     .find({ tacGia: req.session.MaNguoiDung })
     .populate('baiViet', 'tieuDe')
     .sort('-createdAt');
+	
   res.render('trangcanhan', {
     title: 'Trang ca nhan',
     taikhoan,
