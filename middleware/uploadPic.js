@@ -13,16 +13,13 @@ const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: 'trangtindientu',
-    allowed_formats: ['jpeg', 'jpg', 'png', 'gif', 'webp'],
+    allowed_formats: ['jpeg', 'jpg', 'png', 'gif', 'webp', 'jfif', 'avif', 'bmp', 'svg'],
     transformation: [{ width: 800, crop: 'limit' }]
   }
 });
 
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|gif|webp/;
-  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = allowedTypes.test(file.mimetype);
-  if (extname && mimetype) {
+  if (file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
     cb('Chỉ được upload file ảnh!');
