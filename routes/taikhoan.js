@@ -59,7 +59,7 @@ router.post('/avatar', kiemTraDangNhap, upload.single('avatar'), async (req, res
       return res.redirect('/taikhoan');
     }
 
-    const avatarPath = '/picture/' + req.file.filename;
+    const avatarPath = req.file.path;
 
     await TaiKhoan.findByIdAndUpdate(req.session.MaNguoiDung, {
       avatar: avatarPath
