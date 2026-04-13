@@ -13,8 +13,13 @@ const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: 'trangtindientu',
-    allowed_formats: ['jpeg', 'jpg', 'png', 'gif', 'webp', 'jfif', 'avif', 'bmp', 'svg'],
-    transformation: [{ width: 800, crop: 'limit' }]
+	allowed_formats: [
+	  'jpeg', 'jpg', 'png', 'gif', 'webp', 
+	  'jfif', 'avif', 'bmp', 'svg', 
+	  'tiff', 'tif', 'heic', 'heif', 'ico',
+	  'jp2', 'j2k'
+	],    
+	transformation: [{ width: 800, crop: 'limit' }]
   }
 });
 
@@ -24,7 +29,7 @@ const fileFilter = (req, file, cb) => {
   } else {
     cb('Chỉ được upload file ảnh!');
   }
-};
+};	
 
 const upload = multer({ storage, fileFilter });
 module.exports = upload;
