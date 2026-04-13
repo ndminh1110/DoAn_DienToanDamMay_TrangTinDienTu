@@ -16,8 +16,7 @@ const storage = new CloudinaryStorage({
 	allowed_formats: [
 	  'jpeg', 'jpg', 'png', 'gif', 'webp', 
 	  'jfif', 'avif', 'bmp', 'svg', 
-	  'tiff', 'tif', 'heic', 'heif', 'ico',
-	  'jp2', 'j2k'
+	  'tiff', 'tif', 'ico', 'jp2', 'j2k'
 	],    
 	transformation: [{ width: 800, crop: 'limit' }]
   }
